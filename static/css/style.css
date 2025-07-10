@@ -1,0 +1,51 @@
+/* Custom styles for Military Unit Dashboard */
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.footer {
+    margin-top: auto;
+}
+
+/* Dashboard card styles */
+.dashboard-card {
+    transition: transform 0.3s;
+    height: 100%;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Table styles */
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Status badges */
+.status-active {
+    background-color: #28a745;
+}
+
+.status-leave {
+    background-color: #ffc107;
+}
+
+.status-deployed {
+    background-color: #007bff;
+}
+
+.status-operational {
+    background-color: #28a745;
+}
+
+.status-maintenance {
+    background-color: #ffc107;
+}
+
+.status-retired {
+    background-color: #dc3545;
+}

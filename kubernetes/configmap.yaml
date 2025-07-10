@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: military-dashboard-config
+data:
+  DATABASE_URL: "postgres://postgres:postgres@postgres-service:5432/military_dashboard"
+  SECRET_KEY: "k8s-deployment-secret-key-change-in-production"
+  DEBUG: "0"
+  ALLOWED_HOSTS: "military-dashboard.local,military-dashboard"

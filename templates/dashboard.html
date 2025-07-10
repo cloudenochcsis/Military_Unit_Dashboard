@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Military Unit Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Military Unit Dashboard</h1>
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card dashboard-card bg-primary text-white">
+            <div class="card-body">
+                <h5 class="card-title">Soldiers</h5>
+                <h2 class="display-4">{{ soldier_count }}</h2>
+                <p class="card-text">Total soldiers in the unit</p>
+                <a href="/soldiers/" class="btn btn-light">View All</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card dashboard-card bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title">Equipment</h5>
+                <h2 class="display-4">{{ equipment_count }}</h2>
+                <p class="card-text">Total equipment items</p>
+                <a href="/equipment/" class="btn btn-light">View All</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card dashboard-card bg-info text-white">
+            <div class="card-body">
+                <h5 class="card-title">Operational Equipment</h5>
+                <h2 class="display-4">{{ operational_equipment_count }}</h2>
+                <p class="card-text">Equipment ready for use</p>
+                <a href="/equipment/?status=Operational" class="btn btn-light">View Details</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Equipment Status Chart -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Equipment Status Distribution</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="equipmentStatusChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for soldier in recent_soldiers %}
+                    <li class="list-group-item">
+                        <span class="badge bg-primary">Soldier</span>
+                        {{ soldier.rank }} {{ soldier.name }} - {{ soldier.status }}
+                        <small class="text-muted float-end">{{ soldier.created_at|date:"M d, Y" }}</small>
+                    </li>
+                    {% endfor %}
+                    {% for item in recent_equipment %}
+                    <li class="list-group-item">
+                        <span class="badge bg-success">Equipment</span>
+                        {{ item.name }} - {{ item.status }}
+                        <small class="text-muted float-end">{{ item.created_at|date:"M d, Y" }}</small>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js for simple charts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Equipment Status Chart
+        const statusCtx = document.getElementById('equipmentStatusChart').getContext('2d');
+        
+        // Create arrays for labels and data
+        const labels = [];
+        const data = [];
+        {% for item in equipment_status %}
+            labels.push('{{ item.status }}');
+            data.push({{ item.count }});
+        {% endfor %}
+        
+        const statusData = {
+            labels: labels,
+            datasets: [{
+                label: 'Equipment Status',
+                data: data,
+                backgroundColor: [
+                    'rgba(40, 167, 69, 0.7)',  // Operational - Green
+                    'rgba(255, 193, 7, 0.7)',  // Maintenance - Yellow
+                    'rgba(220, 53, 69, 0.7)'   // Retired - Red
+                ],
+                borderColor: [
+                    'rgba(40, 167, 69, 1)',
+                    'rgba(255, 193, 7, 1)',
+                    'rgba(220, 53, 69, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+        
+        new Chart(statusCtx, {
+            type: 'pie',
+            data: statusData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Equipment Status Distribution'
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

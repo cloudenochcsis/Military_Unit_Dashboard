@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: military-dashboard
+  labels:
+    app: military-dashboard
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: military-dashboard
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: military-dashboard
+    spec:
+      containers:
+      - name: military-dashboard
+        image: military-dashboard:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: military-dashboard-config
+              key: DATABASE_URL
+        - name: SECRET_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: military-dashboard-config
+              key: SECRET_KEY
+        - name: DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: military-dashboard-config
+              key: DEBUG
+        - name: ALLOWED_HOSTS
+          valueFrom:
+            configMapKeyRef:
+              name: military-dashboard-config
+              key: ALLOWED_HOSTS
+        livenessProbe:
+          httpGet:
+            path: /health/
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health/
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 5
+      initContainers:
+      - name: db-migrations
+        image: military-dashboard:latest
+        command: ['python', 'manage.py', 'migrate']
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: military-dashboard-config
+              key: DATABASE_URL
+        - name: SECRET_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: military-dashboard-config
+              key: SECRET_KEY

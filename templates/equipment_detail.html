@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ equipment.name }} - Military Unit Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ equipment.name }}</h1>
+    <div>
+        <a href="{% url 'equipment_update' equipment.id %}" class="btn btn-warning">Edit</a>
+        <a href="{% url 'equipment_delete' equipment.id %}" class="btn btn-danger delete-confirm">Delete</a>
+        <a href="{% url 'equipment_list' %}" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Equipment Information</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <th>Name:</th>
+                        <td>{{ equipment.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Type:</th>
+                        <td>{{ equipment.type }}</td>
+                    </tr>
+                    <tr>
+                        <th>Serial Number:</th>
+                        <td>{{ equipment.serial_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status:</th>
+                        <td>
+                            {% if equipment.status == 'Operational' %}
+                            <span class="badge bg-success">{{ equipment.status }}</span>
+                            {% elif equipment.status == 'Maintenance' %}
+                            <span class="badge bg-warning">{{ equipment.status }}</span>
+                            {% elif equipment.status == 'Retired' %}
+                            <span class="badge bg-danger">{{ equipment.status }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Assigned To:</th>
+                        <td>
+                            {% if equipment.assigned_to %}
+                            <a href="{% url 'soldier_detail' equipment.assigned_to.id %}">
+                                {{ equipment.assigned_to.rank }} {{ equipment.assigned_to.name }}
+                            </a>
+                            {% else %}
+                            <span class="text-muted">Not assigned</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Added:</th>
+                        <td>{{ equipment.created_at|date:"F j, Y" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Last Updated:</th>
+                        <td>{{ equipment.updated_at|date:"F j, Y" }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

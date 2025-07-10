@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ soldier.rank }} {{ soldier.name }} - Military Unit Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ soldier.rank }} {{ soldier.name }}</h1>
+    <div>
+        <a href="{% url 'soldier_update' soldier.id %}" class="btn btn-warning">Edit</a>
+        <a href="{% url 'soldier_delete' soldier.id %}" class="btn btn-danger delete-confirm">Delete</a>
+        <a href="{% url 'soldier_list' %}" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Soldier Information</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <th>Name:</th>
+                        <td>{{ soldier.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Rank:</th>
+                        <td>{{ soldier.rank }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email:</th>
+                        <td>{{ soldier.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Phone:</th>
+                        <td>{{ soldier.phone }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status:</th>
+                        <td>
+                            {% if soldier.status == 'Active' %}
+                            <span class="badge bg-success">{{ soldier.status }}</span>
+                            {% elif soldier.status == 'On Leave' %}
+                            <span class="badge bg-warning">{{ soldier.status }}</span>
+                            {% elif soldier.status == 'Deployed' %}
+                            <span class="badge bg-primary">{{ soldier.status }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Added:</th>
+                        <td>{{ soldier.created_at|date:"F j, Y" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Last Updated:</th>
+                        <td>{{ soldier.updated_at|date:"F j, Y" }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Assigned Equipment</h5>
+            </div>
+            <div class="card-body">
+                {% if assigned_equipment %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Serial Number</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in assigned_equipment %}
+                            <tr>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.type }}</td>
+                                <td>{{ item.serial_number }}</td>
+                                <td>
+                                    {% if item.status == 'Operational' %}
+                                    <span class="badge bg-success">{{ item.status }}</span>
+                                    {% elif item.status == 'Maintenance' %}
+                                    <span class="badge bg-warning">{{ item.status }}</span>
+                                    {% elif item.status == 'Retired' %}
+                                    <span class="badge bg-danger">{{ item.status }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No equipment assigned to this soldier.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
