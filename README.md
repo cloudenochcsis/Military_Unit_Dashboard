@@ -1,6 +1,6 @@
 # Military Unit Dashboard
 
-A simple MVP Django web application for military unit management, focused on basic functionality for Kubernetes deployment practice.
+A simple MVP Django web application for military unit management, focused on basic functionality for Kubernetes deployment practice. This project serves as a learning tool for DevOps engineers practicing Kubernetes deployment, scaling, and management.
 
 ## Features
 
@@ -33,8 +33,8 @@ A simple MVP Django web application for military unit management, focused on bas
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
-   cd military-unit-dashboard
+   git clone git@github.com:cloudenochcsis/Military_Unit_Dashboard.git
+   cd Military_Unit_Dashboard
    ```
 
 2. Create a virtual environment and activate it:
@@ -184,6 +184,18 @@ military_dashboard/
 - Set up proper TLS/SSL for secure connections
 - Implement proper backup strategies for the database
 - Configure appropriate resource limits in Kubernetes manifests
+
+## Version History
+
+- **v1.0.0** - Initial MVP release with core features (Soldier and Equipment management, Dashboard, Docker and Kubernetes support)
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
