@@ -33,7 +33,7 @@ A simple MVP Django web application for military unit management, focused on bas
 
 1. Clone the repository:
    ```bash
-   git clone git@github.com:cloudenochcsis/Military_Unit_Dashboard.git
+   git clone https://github.com/cloudenochcsis/Military_Unit_Dashboard.git
    cd Military_Unit_Dashboard
    ```
 
