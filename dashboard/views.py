@@ -1,13 +1,42 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from django.db.models import Count, Q
-from .models import Soldier, Equipment
-from .forms import SoldierForm, EquipmentForm, SoldierSearchForm
+from .models import Soldier, Equipment, UserProfile
+from .forms import SoldierForm, EquipmentForm, SoldierSearchForm, UserRegistrationForm
+
+# Helper functions for role-based access control
+def is_admin(user):
+    if not user.is_authenticated:
+        return False
+    try:
+        return user.profile.role == 'Admin'
+    except:
+        return False
+
+def is_officer_or_admin(user):
+    if not user.is_authenticated:
+        return False
+    try:
+        return user.profile.role in ['Officer', 'Admin']
+    except:
+        return False
 
 # Authentication views
+def register_view(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account created for {username}! You can now log in.')
+            return redirect('login')
+    else:
+        form = UserRegistrationForm()
+    return render(request, 'register.html', {'form': form})
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -60,6 +89,7 @@ def dashboard(request):
 
 # Soldier CRUD views
 @login_required
+@user_passes_test(is_officer_or_admin, login_url='dashboard')
 def soldier_list(request):
     search_form = SoldierSearchForm(request.GET)
     soldiers = Soldier.objects.all().order_by('name')
@@ -76,6 +106,7 @@ def soldier_list(request):
     return render(request, 'soldier_list.html', context)
 
 @login_required
+@user_passes_test(is_officer_or_admin, login_url='dashboard')
 def soldier_detail(request, pk):
     soldier = get_object_or_404(Soldier, pk=pk)
     assigned_equipment = soldier.equipment.all()
@@ -87,6 +118,7 @@ def soldier_detail(request, pk):
     return render(request, 'soldier_detail.html', context)
 
 @login_required
+@user_passes_test(is_admin, login_url='dashboard')
 def soldier_create(request):
     if request.method == 'POST':
         form = SoldierForm(request.POST)
@@ -100,6 +132,7 @@ def soldier_create(request):
     return render(request, 'soldier_form.html', {'form': form, 'title': 'Add Soldier'})
 
 @login_required
+@user_passes_test(is_admin, login_url='dashboard')
 def soldier_update(request, pk):
     soldier = get_object_or_404(Soldier, pk=pk)
     
@@ -115,6 +148,7 @@ def soldier_update(request, pk):
     return render(request, 'soldier_form.html', {'form': form, 'title': 'Update Soldier'})
 
 @login_required
+@user_passes_test(is_admin, login_url='dashboard')
 def soldier_delete(request, pk):
     soldier = get_object_or_404(Soldier, pk=pk)
     
@@ -128,6 +162,7 @@ def soldier_delete(request, pk):
 
 # Equipment CRUD views
 @login_required
+@user_passes_test(is_officer_or_admin, login_url='dashboard')
 def equipment_list(request):
     equipment = Equipment.objects.all().order_by('name')
     context = {
@@ -136,6 +171,7 @@ def equipment_list(request):
     return render(request, 'equipment_list.html', context)
 
 @login_required
+@user_passes_test(is_officer_or_admin, login_url='dashboard')
 def equipment_detail(request, pk):
     equipment = get_object_or_404(Equipment, pk=pk)
     context = {
@@ -144,6 +180,7 @@ def equipment_detail(request, pk):
     return render(request, 'equipment_detail.html', context)
 
 @login_required
+@user_passes_test(is_admin, login_url='dashboard')
 def equipment_create(request):
     if request.method == 'POST':
         form = EquipmentForm(request.POST)
@@ -157,6 +194,7 @@ def equipment_create(request):
     return render(request, 'equipment_form.html', {'form': form, 'title': 'Add Equipment'})
 
 @login_required
+@user_passes_test(is_admin, login_url='dashboard')
 def equipment_update(request, pk):
     equipment = get_object_or_404(Equipment, pk=pk)
     
@@ -172,6 +210,7 @@ def equipment_update(request, pk):
     return render(request, 'equipment_form.html', {'form': form, 'title': 'Update Equipment'})
 
 @login_required
+@user_passes_test(is_admin, login_url='dashboard')
 def equipment_delete(request, pk):
     equipment = get_object_or_404(Equipment, pk=pk)
     

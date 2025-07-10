@@ -48,5 +48,10 @@ ehthumbs.db
 Thumbs.db
 
 # Project specific
+.windsurf/
+*.sqlite3-journal
+static/admin/
+static/collected/
+.env
 .env
 staticfiles/

@@ -3,73 +3,98 @@
 {% block title %}Dashboard - Military Unit Dashboard{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Military Unit Dashboard</h1>
+<div class="page-header mb-4">
+    <div class="d-flex align-items-center">
+        <i class="fas fa-shield-alt fa-2x me-3"></i>
+        <h1 class="mb-0">Military Unit Dashboard</h1>
+    </div>
+</div>
 
 <!-- Summary Cards -->
 <div class="row mb-4">
     <div class="col-md-4">
-        <div class="card dashboard-card bg-primary text-white">
-            <div class="card-body">
-                <h5 class="card-title">Soldiers</h5>
-                <h2 class="display-4">{{ soldier_count }}</h2>
+        <div class="card dashboard-card">
+            <div class="card-header military-card-header">
+                <h5 class="mb-0"><i class="fas fa-users me-2"></i>Soldiers</h5>
+            </div>
+            <div class="card-body text-center">
+                <h2 class="display-4 fw-bold">{{ soldier_count }}</h2>
                 <p class="card-text">Total soldiers in the unit</p>
-                <a href="/soldiers/" class="btn btn-light">View All</a>
+                <div class="d-grid gap-2">
+                    <a href="/soldiers/" class="btn btn-military"><i class="fas fa-list me-2"></i>View All</a>
+                </div>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card dashboard-card bg-success text-white">
-            <div class="card-body">
-                <h5 class="card-title">Equipment</h5>
-                <h2 class="display-4">{{ equipment_count }}</h2>
+        <div class="card dashboard-card">
+            <div class="card-header military-card-header">
+                <h5 class="mb-0"><i class="fas fa-tools me-2"></i>Equipment</h5>
+            </div>
+            <div class="card-body text-center">
+                <h2 class="display-4 fw-bold">{{ equipment_count }}</h2>
                 <p class="card-text">Total equipment items</p>
-                <a href="/equipment/" class="btn btn-light">View All</a>
+                <div class="d-grid gap-2">
+                    <a href="/equipment/" class="btn btn-military"><i class="fas fa-list me-2"></i>View All</a>
+                </div>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card dashboard-card bg-info text-white">
-            <div class="card-body">
-                <h5 class="card-title">Operational Equipment</h5>
-                <h2 class="display-4">{{ operational_equipment_count }}</h2>
+        <div class="card dashboard-card">
+            <div class="card-header military-card-header">
+                <h5 class="mb-0"><i class="fas fa-check-circle me-2"></i>Operational Equipment</h5>
+            </div>
+            <div class="card-body text-center">
+                <h2 class="display-4 fw-bold">{{ operational_equipment_count }}</h2>
                 <p class="card-text">Equipment ready for use</p>
-                <a href="/equipment/?status=Operational" class="btn btn-light">View Details</a>
+                <div class="d-grid gap-2">
+                    <a href="/equipment/?status=Operational" class="btn btn-military"><i class="fas fa-search me-2"></i>View Details</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Equipment Status Chart -->
+<!-- Charts and Recent Activity -->
 <div class="row mb-4">
     <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">Equipment Status Distribution</h5>
+        <div class="card military-card">
+            <div class="card-header military-card-header">
+                <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Equipment Status Distribution</h5>
             </div>
-            <div class="card-body">
+            <div class="card-body chart-container">
                 <canvas id="equipmentStatusChart"></canvas>
             </div>
         </div>
     </div>
     <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">Recent Activity</h5>
+        <div class="card military-card">
+            <div class="card-header military-card-header">
+                <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Activity</h5>
             </div>
             <div class="card-body">
                 <ul class="list-group">
                     {% for soldier in recent_soldiers %}
-                    <li class="list-group-item">
-                        <span class="badge bg-primary">Soldier</span>
-                        {{ soldier.rank }} {{ soldier.name }} - {{ soldier.status }}
-                        <small class="text-muted float-end">{{ soldier.created_at|date:"M d, Y" }}</small>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="status-badge status-active"><i class="fas fa-user-circle me-1"></i>Soldier</span>
+                            <span class="ms-2">{{ soldier.rank }} {{ soldier.name }}</span>
+                            <span class="ms-2 badge bg-secondary">{{ soldier.status }}</span>
+                        </div>
+                        <small class="text-muted">{{ soldier.created_at|date:"M d, Y" }}</small>
                     </li>
                     {% endfor %}
                     {% for item in recent_equipment %}
-                    <li class="list-group-item">
-                        <span class="badge bg-success">Equipment</span>
-                        {{ item.name }} - {{ item.status }}
-                        <small class="text-muted float-end">{{ item.created_at|date:"M d, Y" }}</small>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="status-badge status-operational"><i class="fas fa-tools me-1"></i>Equipment</span>
+                            <span class="ms-2">{{ item.name }}</span>
+                            <span class="ms-2 badge {% if item.status == 'Operational' %}bg-success{% elif item.status == 'Maintenance' %}bg-warning{% else %}bg-danger{% endif %}">
+                                {{ item.status }}
+                            </span>
+                        </div>
+                        <small class="text-muted">{{ item.created_at|date:"M d, Y" }}</small>
                     </li>
                     {% endfor %}
                 </ul>
@@ -78,7 +103,7 @@
     </div>
 </div>
 
-<!-- Chart.js for simple charts -->
+<!-- Chart.js for military-themed charts -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -88,10 +113,17 @@
         // Create arrays for labels and data
         const labels = [];
         const data = [];
+        // Use Django template to initialize JavaScript arrays
         {% for item in equipment_status %}
-            labels.push('{{ item.status }}');
-            data.push({{ item.count }});
+        labels.push('{{ item.status }}');
+        data.push({{ item.count }});
         {% endfor %}
+        
+        // Military theme colors
+        const militaryOlive = '#556B2F';
+        const militaryKhaki = '#F0E68C';
+        const militaryDarkGray = '#2F4F4F';
+        const militaryGold = '#FFD700';
         
         const statusData = {
             labels: labels,
@@ -99,35 +131,44 @@
                 label: 'Equipment Status',
                 data: data,
                 backgroundColor: [
-                    'rgba(40, 167, 69, 0.7)',  // Operational - Green
-                    'rgba(255, 193, 7, 0.7)',  // Maintenance - Yellow
-                    'rgba(220, 53, 69, 0.7)'   // Retired - Red
+                    militaryOlive + 'CC',  // Operational - Olive with transparency
+                    militaryKhaki + 'CC',  // Maintenance - Khaki with transparency
+                    militaryDarkGray + 'CC'  // Retired - Dark Gray with transparency
                 ],
                 borderColor: [
-                    'rgba(40, 167, 69, 1)',
-                    'rgba(255, 193, 7, 1)',
-                    'rgba(220, 53, 69, 1)'
+                    militaryOlive,
+                    militaryKhaki,
+                    militaryDarkGray
                 ],
-                borderWidth: 1
+                borderWidth: 2
             }]
         };
         
-        new Chart(statusCtx, {
-            type: 'pie',
+        const chartConfig = {
+            type: 'doughnut',
             data: statusData,
             options: {
                 responsive: true,
+                cutout: '65%',
                 plugins: {
                     legend: {
-                        position: 'bottom'
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                family: "'Roboto', 'Arial', sans-serif",
+                                weight: 'bold'
+                            },
+                            color: militaryDarkGray
+                        }
                     },
                     title: {
-                        display: true,
-                        text: 'Equipment Status Distribution'
+                        display: false
                     }
                 }
             }
-        });
+        };
+        
+        const equipmentChart = new Chart(statusCtx, chartConfig);
     });
 </script>
 {% endblock %}

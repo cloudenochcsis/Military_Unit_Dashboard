@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-from dashboard.models import Soldier, Equipment
+from dashboard.models import Soldier, Equipment, UserProfile
 import random
 
 class Command(BaseCommand):
@@ -9,10 +9,43 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write('Seeding data...')
         
-        # Create superuser if it doesn't exist
+        # Create users with different roles if they don't exist
+        roles = ['Admin', 'Officer', 'Soldier']
+        
+        # Create superuser/admin if it doesn't exist
         if not User.objects.filter(username='admin').exists():
-            User.objects.create_superuser('admin', 'admin@military.gov', 'adminpassword')
-            self.stdout.write(self.style.SUCCESS('Superuser created'))
+            admin_user = User.objects.create_superuser('admin', 'admin@military.gov', 'adminpassword')
+            # Update the role since UserProfile is created automatically by signal
+            admin_user.profile.role = 'Admin'
+            admin_user.profile.save()
+            self.stdout.write(self.style.SUCCESS('Admin user created'))
+        
+        # Create officer users
+        if not User.objects.filter(username='officer1').exists():
+            officer1 = User.objects.create_user('officer1', 'officer1@military.gov', 'officerpass')
+            # Update the role since UserProfile is created automatically by signal
+            officer1.profile.role = 'Officer'
+            officer1.profile.save()
+            self.stdout.write(self.style.SUCCESS('Officer1 user created'))
+            
+        if not User.objects.filter(username='officer2').exists():
+            officer2 = User.objects.create_user('officer2', 'officer2@military.gov', 'officerpass')
+            # Update the role since UserProfile is created automatically by signal
+            officer2.profile.role = 'Officer'
+            officer2.profile.save()
+            self.stdout.write(self.style.SUCCESS('Officer2 user created'))
+        
+        # Create soldier users
+        for i in range(1, 4):  # Create 3 soldier users
+            username = f'soldier{i}'
+            if not User.objects.filter(username=username).exists():
+                soldier_user = User.objects.create_user(
+                    username, 
+                    f'{username}@military.gov', 
+                    'soldierpass'
+                )
+                # No need to update role since 'Soldier' is the default
+                self.stdout.write(self.style.SUCCESS(f'{username.capitalize()} user created'))
         
         # Create soldiers if none exist
         if Soldier.objects.count() == 0:
@@ -70,4 +103,14 @@ class Command(BaseCommand):
             Equipment.objects.bulk_create(equipment)
             self.stdout.write(self.style.SUCCESS(f'Created {len(equipment)} equipment items'))
         
+        # Summary of created data
         self.stdout.write(self.style.SUCCESS('Database seeding completed successfully'))
+        self.stdout.write(self.style.SUCCESS(f'Users created: {User.objects.count()}'))
+        self.stdout.write(self.style.SUCCESS(f'Soldiers created: {Soldier.objects.count()}'))
+        self.stdout.write(self.style.SUCCESS(f'Equipment items created: {Equipment.objects.count()}'))
+        
+        # Print login credentials for testing
+        self.stdout.write(self.style.SUCCESS('\nTest login credentials:'))
+        self.stdout.write('Admin user: username=admin, password=adminpassword')
+        self.stdout.write('Officer users: username=officer1/officer2, password=officerpass')
+        self.stdout.write('Soldier users: username=soldier1/soldier2/soldier3, password=soldierpass')

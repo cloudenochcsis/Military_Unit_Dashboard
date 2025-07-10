@@ -6,16 +6,18 @@ Build a simple Military Unit Dashboard web application using Django for Kubernet
 ## Technology Stack
 - **Backend:** Python/Django 4.2+
 - **Database:** PostgreSQL
-- **Frontend:** Django Templates (similar to Jinja2) with basic HTML/CSS
-- **Styling:** Minimal CSS or simple Bootstrap CDN (no complex JavaScript)
-- **Authentication:** Django's built-in authentication system
+- **Frontend:** Django Templates with military-themed UI
+- **Styling:** Custom CSS with military color scheme (olive green, khaki, dark gray)
+- **Authentication:** Django's built-in authentication system with custom registration
 
 ## Core Features to Implement (MVP)
 
-### 1. Basic User Authentication
-- Simple login/logout (use Django's built-in auth)
+### 1. User Authentication & Registration
+- User registration form for new users
+- Login/logout functionality
+- User profile page (basic info)
 - Admin user can access Django admin panel
-- No registration - pre-create users
+- Simple role assignment (Admin, Officer, Soldier) during registration
 
 ### 2. Simple Unit Roster
 - Add, edit, delete, and view soldiers
@@ -45,20 +47,24 @@ Build a simple Military Unit Dashboard web application using Django for Kubernet
 
 ### Database Models (Simple)
 Create basic Django models:
-- Soldier (name, rank, email, phone, status)
+- User Profile (extend Django User with role field: Admin, Officer, Soldier)
+- Soldier (name, rank, email, phone, status, service_number)
 - Equipment (name, type, serial_number, status, assigned_to)
 
 ### Views and URLs
-- Simple function-based views
-- Basic CRUD operations
-- Dashboard view with counts and charts
+- Registration view with role selection
+- Login/logout views
+- User profile view
+- Simple function-based views for CRUD operations
+- Dashboard view with counts and basic charts
 
-### Templates (Basic HTML with Django Templates)
-- Use Django's template engine (similar to Jinja2)
-- Simple HTML structure with minimal CSS
-- Basic forms using Django form rendering
-- Simple table layouts for data display
-- No complex JavaScript - keep it server-side rendered
+### Templates (Military-Themed)
+- Base template with military color scheme and styling
+- Navigation bar with military-style design
+- Registration and login forms with military styling
+- Dashboard with military-inspired layout
+- Forms and tables with consistent military theme
+- Use military fonts and color palette (olive green, khaki, dark gray, gold accents)
 
 ### Kubernetes Deployment Focus
 - Include Dockerfile for containerization
@@ -67,11 +73,13 @@ Create basic Django models:
 - Use environment variables for database configuration
 - Health check endpoints for Kubernetes probes
 
-## Additional Features (Optional)
+## Additional Features (Enhanced)
+- User registration with role-based access
+- Military-themed UI with appropriate colors and styling
 - Basic search functionality using Django forms
-- Simple HTML tables for data display
-- Basic CSS styling (no frameworks needed)
-- Server-side rendering only
+- Military-style tables and forms
+- User profile management
+- Role-based navigation (different views for Admin vs Officer vs Soldier)
 
 ## Development Guidelines (Keep it Simple)
 - Use Django's built-in features when possible
@@ -102,36 +110,55 @@ military_dashboard/
 │   └── admin.py
 ├── static/
 │   ├── css/
-│   └── js/
+│   │   └── military-theme.css (custom military styling)
+│   ├── js/ (minimal if needed)
+│   └── images/ (military icons/logos)
 └── templates/
-    ├── base.html (basic HTML structure)
-    ├── dashboard.html (simple dashboard with counts)
-    ├── soldier_list.html (HTML table)
-    ├── equipment_list.html (HTML table)
-    └── forms/ (basic Django forms)
+    ├── base.html (military-themed base template)
+    ├── registration/
+    │   ├── register.html
+    │   ├── login.html
+    │   └── profile.html
+    ├── dashboard.html (military-styled dashboard)
+    ├── soldier_list.html (military-themed table)
+    ├── equipment_list.html (military-themed table)
+    └── forms/ (military-styled forms)
 ```
 
+## Military Theme Design Guidelines
+- **Color Scheme**: Use military colors (olive green #556B2F, khaki #F0E68C, dark gray #2F4F4F, gold accents #FFD700)
+- **Typography**: Clean, readable fonts that convey authority and professionalism
+- **Layout**: Structured, organized layouts reminiscent of military documentation
+- **Icons**: Use simple military-inspired icons (stars, chevrons, eagles) if needed
+- **Forms**: Clean, well-organized forms with clear labels
+- **Tables**: Stripe patterns, clear headers, military-style borders
+- **Navigation**: Clean, hierarchical navigation with military styling
 ## Kubernetes Deployment Requirements
 - **Dockerfile**: Multi-stage build for production
 - **Health checks**: `/health/` endpoint for readiness/liveness probes
 - **Environment variables**: Database connection, debug settings
-- **Static files**: Properly configured for containerized deployment
+- **Static files**: Properly configured for containerized deployment (including CSS/images)
 - **Database migrations**: Handle in init container or startup script
 
 ## Deliverables
-- Working Django MVP with basic functionality
+- Working Django MVP with user registration and military theme
+- Custom CSS file with military styling
+- Registration and authentication flow
 - Dockerfile and docker-compose.yml
 - Kubernetes deployment files (deployment.yaml, service.yaml, configmap.yaml)
 - README with setup and deployment instructions
 - Requirements.txt with minimal dependencies
-- Sample data for testing
+- Sample data for testing with different user roles
 
-## Success Criteria (MVP)
+## Success Criteria (Enhanced MVP)
+- User registration and login work correctly
+- Role-based access control functions
+- Military theme is consistently applied
 - Application runs in Docker container
 - Basic CRUD operations work
-- Dashboard shows simple metrics
+- Dashboard shows simple metrics with military styling
 - Ready for Kubernetes deployment
 - Database connection works via environment variables
 - Health check endpoints respond correctly
 
-Please implement this as a simple MVP Django project with basic HTML templating (using Django's template engine which is similar to Jinja2). Focus on server-side rendering with minimal CSS and no complex frontend frameworks. The goal is to have a working application that can be easily deployed and managed in Kubernetes for learning purposes.
+Please implement this as an enhanced MVP Django project with user registration and military-themed UI using Django templates. Focus on clean, military-inspired design while maintaining simplicity for Kubernetes deployment learning.
