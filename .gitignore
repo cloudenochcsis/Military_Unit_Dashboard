@@ -49,6 +49,7 @@ Thumbs.db
 
 # Project specific
 .windsurf/
+.windsurfrules
 *.sqlite3-journal
 static/admin/
 static/collected/
