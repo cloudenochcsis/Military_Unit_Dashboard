@@ -124,56 +124,7 @@ A simple MVP Django web application for military unit management, focused on bas
 
 The application provides a health check endpoint at `/health/` that returns a JSON response with status "ok". This endpoint is used by Kubernetes for liveness and readiness probes.
 
-## Project Structure
 
-```
-military_dashboard/
-├── manage.py
-├── requirements.txt
-├── Dockerfile
-├── docker-compose.yml
-├── README.md
-├── db.sqlite3                # SQLite database file for development
-├── kubernetes/
-│   ├── deployment.yaml
-│   ├── service.yaml
-│   └── configmap.yaml
-├── military_dashboard/
-│   ├── __init__.py
-│   ├── settings.py           # Updated with LOGIN_URL settings
-│   ├── urls.py
-│   └── wsgi.py
-├── dashboard/
-│   ├── models.py             # Soldier and Equipment models
-│   ├── views.py              # Views for dashboard, auth, and CRUD operations
-│   ├── urls.py               # URL patterns for all views
-│   ├── forms.py              # Forms for Soldier and Equipment
-│   ├── admin.py              # Admin configuration
-│   ├── migrations/           # Database migrations
-│   │   └── 0001_initial.py
-│   └── management/
-│       ├── __init__.py
-│       └── commands/
-│           ├── __init__.py
-│           └── seed_data.py  # Command to generate sample data
-├── static/
-│   ├── css/
-│   │   └── style.css        # Custom CSS styles
-│   └── js/
-│       └── main.js          # JavaScript for UI interactions
-└── templates/
-    ├── base.html            # Base template with navigation
-    ├── dashboard.html       # Dashboard with metrics and charts
-    ├── login.html           # Login form
-    ├── soldier_list.html    # List of soldiers with search
-    ├── soldier_detail.html  # Soldier details and assigned equipment
-    ├── soldier_form.html    # Form for creating/editing soldiers
-    ├── soldier_confirm_delete.html
-    ├── equipment_list.html  # List of equipment
-    ├── equipment_detail.html # Equipment details
-    ├── equipment_form.html  # Form for creating/editing equipment
-    └── equipment_confirm_delete.html
-```
 
 ## Notes for Production Deployment
 
