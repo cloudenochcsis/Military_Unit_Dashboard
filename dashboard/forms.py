@@ -1,5 +1,7 @@
 from django import forms
-from .models import Soldier, Equipment
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from .models import Soldier, Equipment, UserProfile
 
 class SoldierForm(forms.ModelForm):
     class Meta:
@@ -30,3 +32,33 @@ class SoldierSearchForm(forms.Form):
         required=False,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Search by name'})
     )
+
+class UserRegistrationForm(UserCreationForm):
+    ROLE_CHOICES = UserProfile.ROLE_CHOICES
+    
+    email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    role = forms.ChoiceField(choices=ROLE_CHOICES, widget=forms.Select(attrs={'class': 'form-select'}))
+    
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2', 'role']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super(UserRegistrationForm, self).__init__(*args, **kwargs)
+        self.fields['password1'].widget.attrs.update({'class': 'form-control'})
+        self.fields['password2'].widget.attrs.update({'class': 'form-control'})
+    
+    def save(self, commit=True):
+        user = super(UserRegistrationForm, self).save(commit=False)
+        user.email = self.cleaned_data['email']
+        
+        if commit:
+            user.save()
+            # Set the role in the user profile
+            user.profile.role = self.cleaned_data['role']
+            user.profile.save()
+        
+        return user

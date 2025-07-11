@@ -3,71 +3,95 @@
 {% block title %}Soldiers - Military Unit Dashboard{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Soldiers</h1>
-    <a href="{% url 'soldier_create' %}" class="btn btn-primary">
-        <i class="bi bi-plus"></i> Add Soldier
-    </a>
+<div class="page-header mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-users fa-2x me-3"></i>
+            <h1 class="mb-0">Soldiers</h1>
+        </div>
+        <a href="{% url 'soldier_create' %}" class="btn btn-military">
+            <i class="fas fa-plus me-2"></i> Add Soldier
+        </a>
+    </div>
 </div>
 
 <!-- Search Form -->
-<div class="card mb-4">
+<div class="card military-card mb-4">
+    <div class="card-header military-card-header">
+        <h5 class="mb-0"><i class="fas fa-search me-2"></i>Search Soldiers</h5>
+    </div>
     <div class="card-body">
         <form method="get" class="row g-3">
             <div class="col-md-10">
                 {{ search_form.search }}
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">Search</button>
+                <button type="submit" class="btn btn-military w-100">
+                    <i class="fas fa-search me-2"></i>Search
+                </button>
             </div>
         </form>
     </div>
 </div>
 
 {% if soldiers %}
-<div class="table-responsive">
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th>Rank</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for soldier in soldiers %}
-            <tr>
-                <td>{{ soldier.rank }}</td>
-                <td>{{ soldier.name }}</td>
-                <td>{{ soldier.email }}</td>
-                <td>{{ soldier.phone }}</td>
-                <td>
-                    {% if soldier.status == 'Active' %}
-                    <span class="badge bg-success">{{ soldier.status }}</span>
-                    {% elif soldier.status == 'On Leave' %}
-                    <span class="badge bg-warning">{{ soldier.status }}</span>
-                    {% elif soldier.status == 'Deployed' %}
-                    <span class="badge bg-primary">{{ soldier.status }}</span>
-                    {% endif %}
-                </td>
-                <td>
-                    <div class="btn-group btn-group-sm" role="group">
-                        <a href="{% url 'soldier_detail' soldier.id %}" class="btn btn-info">View</a>
-                        <a href="{% url 'soldier_update' soldier.id %}" class="btn btn-warning">Edit</a>
-                        <a href="{% url 'soldier_delete' soldier.id %}" class="btn btn-danger delete-confirm">Delete</a>
-                    </div>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="card military-card">
+    <div class="card-header military-card-header">
+        <h5 class="mb-0"><i class="fas fa-list me-2"></i>Soldier Roster</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover military-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for soldier in soldiers %}
+                    <tr>
+                        <td><strong>{{ soldier.rank }}</strong></td>
+                        <td>{{ soldier.name }}</td>
+                        <td><a href="mailto:{{ soldier.email }}" class="military-link">{{ soldier.email }}</a></td>
+                        <td>{{ soldier.phone }}</td>
+                        <td>
+                            {% if soldier.status == 'Active' %}
+                            <span class="status-badge status-active">{{ soldier.status }}</span>
+                            {% elif soldier.status == 'On Leave' %}
+                            <span class="status-badge status-leave">{{ soldier.status }}</span>
+                            {% elif soldier.status == 'Deployed' %}
+                            <span class="status-badge status-deployed">{{ soldier.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="{% url 'soldier_detail' soldier.id %}" class="btn btn-military-secondary" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'soldier_update' soldier.id %}" class="btn btn-military-secondary" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'soldier_delete' soldier.id %}" class="btn btn-military-danger delete-confirm" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 {% else %}
-<div class="alert alert-info">
-    No soldiers found. <a href="{% url 'soldier_create' %}">Add a soldier</a> to get started.
+<div class="alert alert-military">
+    <i class="fas fa-info-circle me-2"></i> No soldiers found. 
+    <a href="{% url 'soldier_create' %}" class="military-link">Add a soldier</a> to get started.
 </div>
 {% endif %}
 {% endblock %}
