@@ -2,7 +2,21 @@
 
 A simple MVP Django web application for military unit management, focused on basic functionality for Kubernetes deployment practice. This project serves as a learning tool for DevOps engineers practicing Kubernetes deployment, scaling, and management.
 
+## Dashboard Overview
+
+![Unit Dashboard Overview](images/Unit_dashboard_overview.png)
+
+## Soldiers Dashboard
+
+![Soldiers Dashboard](images/Soldiers.png)
+
+## Equipment Dashboard
+
+![Equipment Dashboard](images/Equipments.png)
+
 ## Features
+
+![Features Overview](images/Equipments.png)
 
 - **User Authentication**: Login/logout functionality using Django's built-in authentication system
 - **Soldier Management**: Add, edit, delete, and view soldiers with basic information
@@ -92,6 +106,8 @@ A simple MVP Django web application for military unit management, focused on bas
 2. Access the application at http://localhost:8000
 
 ## Kubernetes Deployment
+
+![Kubernetes Deployment](images/kubernetes-deployment.png)
 
 ### Prerequisites
 
