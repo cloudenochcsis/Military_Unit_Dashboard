@@ -6,14 +6,44 @@ from .models import Soldier, Equipment, UserProfile
 class SoldierForm(forms.ModelForm):
     class Meta:
         model = Soldier
-        fields = ['name', 'rank', 'email', 'phone', 'status']
+        fields = ['name', 'branch', 'rank', 'email', 'phone', 'status']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'rank': forms.TextInput(attrs={'class': 'form-control'}),
+            'branch': forms.Select(attrs={'class': 'form-select'}),
+            'rank': forms.Select(attrs={'class': 'form-select'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['branch'].choices = Soldier.BRANCH_CHOICES
+        # Set default rank choices to Army ranks
+        self.fields['rank'].choices = Soldier.ARMY_RANKS
+
+    def clean(self):
+        cleaned_data = super().clean()
+        branch = cleaned_data.get('branch')
+        rank = cleaned_data.get('rank')
+        
+        # Validate that the rank is valid for the selected branch
+        if branch and rank:
+            valid_ranks = {}
+            valid_ranks['Army'] = Soldier.ARMY_RANKS
+            valid_ranks['Navy'] = Soldier.NAVY_RANKS
+            valid_ranks['Air Force'] = Soldier.AIR_FORCE_RANKS
+            valid_ranks['Marine Corps'] = Soldier.MARINE_RANKS
+            valid_ranks['Coast Guard'] = Soldier.COAST_GUARD_RANKS
+            
+            if rank not in dict(valid_ranks[branch]):
+                self.add_error('rank', f"Invalid rank for {branch}")
+
+    def save(self, commit=True):
+        soldier = super().save(commit=False)
+        if commit:
+            soldier.save()
+        return soldier
 
 class EquipmentForm(forms.ModelForm):
     class Meta:
