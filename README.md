@@ -102,12 +102,28 @@ A simple MVP Django web application for military unit management, focused on bas
 
 ## Docker Deployment
 
-1. Build and run the application using Docker Compose:
+1. Create a `.env` file with the following required environment variables:
+   ```bash
+   cp .env.example .env
+   # Edit .env to customize settings if needed
+   ```
+
+2. Build and run the application using Docker Compose:
    ```bash
    docker-compose up --build
    ```
 
-2. Access the application at http://localhost:8000
+3. Access the application at http://localhost:8000
+
+4. Create a superuser:
+   ```bash
+   docker-compose exec web python manage.py createsuperuser
+   ```
+
+5. Load sample data (optional):
+   ```bash
+   docker-compose exec web python manage.py seed_data
+   ```
 
 ## Kubernetes Deployment
 
