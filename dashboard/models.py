@@ -31,8 +31,9 @@ def save_user_profile(sender, instance, **kwargs):
     try:
         if hasattr(instance, 'profile'):
             instance.profile.save()
-    except:
-        pass
+    except Exception as e:
+        # Log the error for debugging
+        print(f"Error saving user profile: {str(e)}")
 
 class Soldier(models.Model):
     STATUS_CHOICES = [

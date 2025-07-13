@@ -57,8 +57,9 @@ class UserRegistrationForm(UserCreationForm):
         
         if commit:
             user.save()
-            # Set the role in the user profile
-            user.profile.role = self.cleaned_data['role']
-            user.profile.save()
+            # Create or get the user profile
+            profile, created = UserProfile.objects.get_or_create(user=user)
+            profile.role = self.cleaned_data['role']
+            profile.save()
         
         return user
