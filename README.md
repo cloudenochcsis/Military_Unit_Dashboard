@@ -127,8 +127,6 @@ A simple MVP Django web application for military unit management, focused on bas
 
 ## Kubernetes Deployment
 
-![Kubernetes Deployment](images/kubernetes-deployment.png)
-
 ### Prerequisites
 
 - Kubernetes cluster
