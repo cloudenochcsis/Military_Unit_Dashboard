@@ -16,14 +16,18 @@ A simple MVP Django web application for military unit management, focused on bas
 
 ## Features
 
-![Features Overview](images/Equipments.png)
-
 - **User Authentication**: Login/logout functionality using Django's built-in authentication system
 - **Soldier Management**: Add, edit, delete, and view soldiers with basic information
 - **Equipment Tracking**: Add, edit, delete, and view equipment with assignment to soldiers
 - **Dashboard**: View counts, recent additions, and equipment status distribution
 - **Admin Panel**: Django admin interface for data management
 - **Kubernetes Ready**: Includes Dockerfile, docker-compose.yml, and Kubernetes manifests
+
+## User Authentication
+
+![Register](images/Register.png)
+
+![Secure Login](images/secure_login.png)
 
 ## Technology Stack
 
